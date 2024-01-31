@@ -78,8 +78,8 @@ public class SessionConfiguration {
        // joinConfig.getTcpIpConfig().setEnabled(true).setMembers(members);
         joinConfig.getTcpIpConfig().setEnabled(false);
         joinConfig.getKubernetesConfig().setEnabled(true)
-        						.setProperty("namespace", "petclinic-kube")
-        						.setProperty("service-name", "hz-service");
+        .setProperty("namespace", "petclinic-kube")
+        .setProperty("service-name", "hz-service");
 
         return Hazelcast.newHazelcastInstance(config);
     }
