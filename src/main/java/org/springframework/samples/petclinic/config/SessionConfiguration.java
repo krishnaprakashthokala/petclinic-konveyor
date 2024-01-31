@@ -77,7 +77,7 @@ public class SessionConfiguration {
         joinConfig.getMulticastConfig().setEnabled(false);
        // joinConfig.getTcpIpConfig().setEnabled(true).setMembers(members);
         joinConfig.getTcpIpConfig().setEnabled(false);
-        joinConfig.getKubernetesConfig().setEnabled(true)
+        config.getKubernetesConfig().setEnabled(true)
         .setProperty("namespace", "petclinic-kube")
         .setProperty("service-name", "hz-service");
 
