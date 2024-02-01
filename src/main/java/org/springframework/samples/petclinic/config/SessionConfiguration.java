@@ -75,11 +75,11 @@ public class SessionConfiguration {
         JoinConfig joinConfig = config.getNetworkConfig().getJoin();
 	joinConfig.getMulticastConfig().setEnabled(false);
 	JoinConfig joinConfig = config.getNetworkConfig().getJoin();
-                 config.getKubernetesConfig().setEnabled(true)
+                 joinConfig.getKubernetesConfig().setEnabled(true)
 			  .setProperty("namespace", "petclinic-kube")
                           .setProperty("service-name", "hz-service");
         joinConfig.getTcpIpConfig().setEnabled(false);                           
-     config.getKubernetesConfig().setEnabled(true)
+     joinConfig.getKubernetesConfig().setEnabled(true)
 			  .setProperty("namespace", "petclinic-kube")
                           .setProperty("service-name", "hz-service");
         return Hazelcast.newHazelcastInstance(config);
