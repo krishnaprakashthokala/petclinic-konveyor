@@ -52,37 +52,38 @@ public class SessionConfiguration {
 
     @Bean
     @SpringSessionHazelcastInstance
-    public HazelcastInstance hazelcastInstance() {
+
+   public HazelcastInstance hazelcastInstance() {
         Config config = new Config();
         config.setClusterName("spring-session-cluster");
-
+ 
         // Add this attribute to be able to query sessions by their PRINCIPAL_NAME_ATTRIBUTE's
         AttributeConfig attributeConfig = new AttributeConfig()
                 .setName(Hazelcast4IndexedSessionRepository.PRINCIPAL_NAME_ATTRIBUTE)
                 .setExtractorClassName(Hazelcast4PrincipalNameExtractor.class.getName());
-
+ 
         // Configure the sessions map
         config.getMapConfig(SESSIONS_MAP_NAME)
                 .addAttributeConfig(attributeConfig).addIndexConfig(
                 new IndexConfig(IndexType.HASH, Hazelcast4IndexedSessionRepository.PRINCIPAL_NAME_ATTRIBUTE));
-
+ 
         
         // Use custom serializer to de/serialize sessions faster. 
         SerializerConfig serializerConfig = new SerializerConfig();
         serializerConfig.setImplementation(new HazelcastSessionSerializer()).setTypeClass(MapSession.class);
         config.getSerializationConfig().addSerializerConfig(serializerConfig);
-        
         JoinConfig joinConfig = config.getNetworkConfig().getJoin();
-        
         joinConfig.getMulticastConfig().setEnabled(false);
        // joinConfig.getTcpIpConfig().setEnabled(true).setMembers(members);
         joinConfig.getTcpIpConfig().setEnabled(false);
-        config.getKubernetesConfig().setEnabled(true)
-        .setProperty("namespace", "petclinic-kube")
-        .setProperty("service-name", "hz-service");
-
+        joinConfig.getKubernetesConfig().setEnabled(true)
+        						.setProperty("namespace", "petclinic-kube")
+        						.setProperty("service-name", "hz-service");
+ 
         return Hazelcast.newHazelcastInstance(config);
     }
+ 
+   
     
     
     // Workaround for https://github.com/spring-projects/spring-session/issues/1040 and https://github.com/spring-projects/spring-framework/issues/22319
