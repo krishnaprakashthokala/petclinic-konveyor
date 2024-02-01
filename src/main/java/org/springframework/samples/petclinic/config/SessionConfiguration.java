@@ -72,16 +72,12 @@ public class SessionConfiguration {
         SerializerConfig serializerConfig = new SerializerConfig();
         serializerConfig.setImplementation(new HazelcastSessionSerializer()).setTypeClass(MapSession.class);
         config.getSerializationConfig().addSerializerConfig(serializerConfig);
-      //  JoinConfig joinConfig = config.getNetworkConfig().getJoin();
-	//joinConfig.getMulticastConfig().setEnabled(false);
+    
 	JoinConfig joinConfig = config.getNetworkConfig().getJoin();
                  joinConfig.getKubernetesConfig().setEnabled(true)
-			  .setProperty("namespace", "namespace")
+			  .setProperty("namespace", "petclinic-konveyor")
                           .setProperty("service-name", "hazelcast-service");
-      //  joinConfig.getTcpIpConfig().setEnabled(false);                           
-   //  joinConfig.getKubernetesConfig().setEnabled(true)
-	//		  .setProperty("namespace", "namespace")
-        //                  .setProperty("service-name", "hazelcast-service");
+     
         return Hazelcast.newHazelcastInstance(config);
     }
  
