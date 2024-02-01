@@ -1,0 +1,74 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: petclinic-kube
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: petclinic-kube
+  namespace: petclinic-kube
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: petclinic-kube
+  template:
+    metadata:
+      labels:
+        app: petclinic-kube
+    spec:
+      containers:
+      - name: petclinic-kube
+        image: quay.io/sraghuna/petclinic:kube
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: petclinic-kube
+  namespace: petclinic-kube
+spec:
+  selector:
+    app: petclinic-kube
+  ports:
+  - name: http
+    port: 8080
+    targetPort: 8080
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+  name: petclinic-kube
+  namespace: petclinic-kube
+spec:
+  ingressClassName: alb
+  rules:
+  - http:
+      paths:
+      - backend:
+          service:
+            name: petclinic-kube
+            port:
+              number: 8080
+        path: /
+        pathType: Prefix
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hz-service
+  namespace: petclinic-kube
+spec:
+  ports:
+  - name: hazelcast
+    port: 5701
+    protocol: TCP
+  selector:
+    app: petclinic-kube
+  sessionAffinity: None
+  type: ClusterIP
